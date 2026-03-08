@@ -91,17 +91,17 @@ Option<User> adult = s.filter(v -> v.age() >= 18);
 
 ---
 layout: true
-#.center[Monadic Datatypes]
+#.center[Some Monadic Datatypes]
 
 ---
 * **Option**
 --
-: absence of a Value
+: absence of a value
 
 --
 * **Try**
 --
-: exception failure of an operations
+: exceptional failure of an operation
 
 --
 * **Either**
@@ -113,17 +113,10 @@ layout: true
 --
 : a value that may be valid or invalid with errors
 
----
-
-
-|DataType | Represents | "Success" | "Failure/Empty" |
-|------      | -----        | -----       |-----              |
-| | | | |
-| | | | |
-|Option   | Potential presence  | Some(value) | None |
-|Try      | Risky operation | Success(value) | Failure(throwable) |
-|Either   | Two possibilities | Right(value) | Left(value / error) |
-|List     | Multiple values | Multiple items | Empty list |
+--
+* **Future**
+--
+: a value is not yet guaranteed to be present
 
 
 ---
