@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+     .small-text {
+        font-size: 14px;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; font-size: "larger"; text-color:"yellow"}
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+title: Sum Types
+class: center, inverse
+
+# Sum Types
+
+
+---
+class: inverse
+
+#.center[Sum Types]
+
+A Sum Type is:
+
+
+--
+* a data type
+
+--
+* that represents a choice between several distinct possibilities
+
+--
+* where each possibility can carry its own unique structure or data
+
+--
+
+Nothing new, we already use them.
+
+---
+#.center[Sum Types]
+###.center[An example:]
+
+
+```java
+sealed interface Result {
+
+  record Success(SomeObject result) {}
+
+  record Failure(List<String> errors) {}
+
+}
+
+```
+--
+
+The `sealed` is important, this is what enforces the several distinct possibilities
+
+---
+
+#.center[So what's the change?]
+
+--
+
+* We tend to use them for modelling different outcomes of an operation
+
+--
+
+* But we can also use them to model entities
+
+---
+```java
+class Trigger {
+  TriggerStatus status;
+  Optional<TaskId> taskId;
+  Optional<RouteType> routeType;
+  Optional<TemplateCode> code;
+  Optional<Instant> startedAt;
+  Optional<Instant> finishedAt;
+  List<String> errors;
+  ...
+}
+```
+
+* When do we have a TaskId?
+* What status has a finishedAt?
+* What fields are available when we triggered successfully?
+
+---
+
+```java
+sealed interface TriggerPhase {
+
+  record NotYetExecuted(TriggerStatus status)
+    implements TriggerPhase {}
+
+  record CouldNotStart(String error, Instant at)
+    implements TriggerPhase {}
+
+  record Executing(TemplateCode code, Instant startedAt)
+    implements TriggerPhase {}
+
+  record Failed(
+    List<String> errors,
+    TemplateCode code,
+    Instant startedAt,
+    Instant finishedAt
+  ) implements TriggerPhase {}
+
+  record Succeeded(
+    TemplateCode code,
+    RouteType routeType,
+    Optional<TaskId> taskId,
+    Instant startedAt,
+    Instant finishedAt
+  ) implements TriggerPhase {}
+
+}
+```
+
+* When do we have a TaskId?
+* What status has a finishedAt?
+* What fields are available when we triggered successfully?
+
+---
+#.center[Data is covered, what about behaviour?]
+
+
+--
+
+* Model transitions as a kind of Finite State Machine (FSM)
+
+--
+
+* Finite State Machine (FSM) is a design pattern where an object's behavior is determined by its current state chosen from a fixed, finite set of possibilities.
+
+---
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create(
+        {
+          ratio: '16:9',
+        }
+      );
+    </script>
+  </body>
+</html>
